@@ -48,9 +48,8 @@ consolelog() {
   return 0
 }
 
-waitfor::tcpup() {
-  while ! echo 'foo' | ncat -w 2 "${1}" "${2}" &> /dev/null; do
-    echo -n '.'
+waitfor::mysql() {
+  while ! mysql -e "SELECT VERSION();"; do
     sleep 5
   done
   sleep 10
@@ -83,7 +82,7 @@ EOF
 
 sleep 10
 consolelog "waiting for mysqld..."
-waitfor::tcpup "127.0.0.1" "3306"
+waitfor::mysql
 sleep 10
 
 for sqlfile in /dumps/*_structure.sql; do
